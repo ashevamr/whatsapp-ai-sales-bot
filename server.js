@@ -823,6 +823,53 @@ async function maybeSendSilentLeadFollowUp(now = Date.now()) {
 
 setInterval(() => { void maybeSendSilentLeadFollowUp(); }, SILENT_FOLLOW_UP_CHECK_MS).unref();
 
+// Safety net for lost 'message' events: once a minute, look in WhatsApp Web for
+// direct chats whose latest real message is an unanswered customer message
+// from the last 15 minutes, and pass it through the normal inbound handler.
+// Dedupe, age limits, automation mode and safety holds all still apply there.
+const MISSED_INBOUND_CHECK_MS = 60 * 1000;
+const MISSED_INBOUND_MIN_AGE_SECONDS = 20;
+let missedInboundSweepRunning = false;
+const sweptInboundIds = new Set();
+
+async function sweepMissedInboundMessages() {
+  if (missedInboundSweepRunning || clientStatus !== 'READY' || !client.pupPage) return;
+  missedInboundSweepRunning = true;
+  try {
+    const candidates = await withTimeout(() => client.pupPage.evaluate(({ minAge }) => {
+      const now = Date.now() / 1000;
+      const isService = type => /notification|e2e|ciphertext|protocol|revoked|call_log|gp2|automated/.test(String(type || ''));
+      return window.require('WAWebCollections').Chat.getModelsArray()
+        .filter(chat => !chat.groupMetadata && Number(chat.t || 0) >= now - 15 * 60)
+        .map(chat => {
+          const id = chat.id._serialized;
+          if (id.endsWith('@g.us') || id.includes('broadcast') || id.endsWith('@newsletter')) return null;
+          const last = (chat.msgs?.getModelsArray?.() || []).filter(msg => !isService(msg.type)).slice(-1)[0];
+          if (!last || last.id.fromMe) return null;
+          const age = now - Number(last.t || 0);
+          return age >= minAge && age <= 15 * 60 ? last.id._serialized : null;
+        })
+        .filter(Boolean);
+    }, { minAge: MISSED_INBOUND_MIN_AGE_SECONDS }), 15_000, 'missed inbound sweep');
+
+    for (const messageId of candidates) {
+      if (sweptInboundIds.has(messageId) || processedMsgIds.has(messageId) || inboundLedger.has(messageId)) continue;
+      sweptInboundIds.add(messageId);
+      if (sweptInboundIds.size > 1000) sweptInboundIds.delete(sweptInboundIds.values().next().value);
+      const msg = await client.getMessageById(messageId).catch(() => null);
+      if (!msg) continue;
+      console.warn(`[MISSED INBOUND] 'message' event was not received for ${msg.from}; processing it now.`);
+      await handleInboundMessage(msg).catch(error => console.error('[INBOUND FAILURE]', error.stack || error));
+    }
+  } catch (error) {
+    console.error('[MISSED INBOUND] Sweep failed:', error.message || error);
+  } finally {
+    missedInboundSweepRunning = false;
+  }
+}
+
+setInterval(() => { void sweepMissedInboundMessages(); }, MISSED_INBOUND_CHECK_MS).unref();
+
 async function sendBubblesSequentially(chatId, chatObj, bubbles, chatRecord) {
   let sentCount = 0;
   let skippedCount = 0;
@@ -1003,11 +1050,11 @@ async function sendProductCatalog(chatId, chatObj, chatRecord) {
   return true;
 }
 
-// First reply to a new ad lead, as the manager does it: city question, short
-// RO-H015 specs, a photo and the video, then the warranty. The poster with the
-// old price is deliberately not sent.
+// First reply to a new ad lead: greeting, short RO-H015 specs, the ad poster
+// with the current price and the video, the warranty, and the city question
+// last. The old ro_h015_poster.png shows an outdated price and is never sent.
 const RO_H015_OPENER_MEDIA = [
-  path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_1_main.jpeg'),
+  path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_poster_65000.jpeg'),
   path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_video.mp4')
 ];
 
@@ -1025,14 +1072,27 @@ async function sendAdvertisedModelOpener(chatId, chatObj, chatRecord) {
     await sendAutomatedMessage(chatId, text);
     pushBotMessage(text);
   }
+  // WhatsApp Web sometimes fails to prepare media right after connecting
+  // ("Data passed to getter must include an id property"). Retry once; a photo
+  // that still fails must not stop the warranty message or hand the lead over.
   for (const mediaPath of RO_H015_OPENER_MEDIA) {
     if (!fs.existsSync(mediaPath)) continue;
-    await sendAutomatedMessage(chatId, MessageMedia.fromFilePath(mediaPath));
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      try {
+        await sendAutomatedMessage(chatId, MessageMedia.fromFilePath(mediaPath));
+        break;
+      } catch (error) {
+        console.warn(`[AD OPENER] Media ${path.basename(mediaPath)} attempt ${attempt} failed: ${error.message || error}`);
+        if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+    }
     await new Promise(resolve => setTimeout(resolve, 800));
   }
-  await simulateHumanTyping(chatObj, opener.warranty.length);
-  await sendAutomatedMessage(chatId, opener.warranty);
-  pushBotMessage(opener.warranty);
+  for (const text of [opener.warranty, opener.cityQuestion]) {
+    await simulateHumanTyping(chatObj, text.length);
+    await sendAutomatedMessage(chatId, text);
+    pushBotMessage(text);
+  }
 
   if (!chatRecord.roH015Sent) chatRecord.roH015Sent = { photos: false, size: false, video: false };
   chatRecord.roH015Sent.video = true;
@@ -1272,7 +1332,31 @@ client.on('qr', (qr) => {
   broadcast('status', { status: clientStatus, qr });
 });
 
+// whatsapp-web.js attaches its message listeners only on the first sync
+// callback that finds the page uninjected. When that run fails or races with
+// READY recovery, the client still becomes READY but never emits 'message'.
+// Track the page the listeners were attached to and attach them if missing.
+let listenersAttachedPage = null;
+const attachWhatsAppEventListeners = client.attachEventListeners.bind(client);
+client.attachEventListeners = async (...args) => {
+  const result = await attachWhatsAppEventListeners(...args);
+  listenersAttachedPage = client.pupPage;
+  return result;
+};
+
+async function ensureMessageListenersAttached() {
+  if (!client.pupPage || listenersAttachedPage === client.pupPage) return;
+  console.warn('[LISTENERS] WhatsApp is READY without message listeners; attaching them now.');
+  try {
+    await client.attachEventListeners();
+    console.log('[LISTENERS] Message listeners attached.');
+  } catch (error) {
+    console.error('[LISTENERS] Could not attach message listeners:', error.message || error);
+  }
+}
+
 client.on('ready', () => {
+  void ensureMessageListenersAttached();
   // WhatsApp Web can emit 'ready' several times for one connection. Timers,
   // reminders and the inbound queue were already handled by the first event.
   if (clientStatus === 'READY') {

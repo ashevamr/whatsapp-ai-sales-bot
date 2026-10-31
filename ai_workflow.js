@@ -474,14 +474,14 @@ class AIWorkflow {
     return 'Доброе утро!';
   }
 
-  // First reply to a new ad lead, modelled on the manager's own messages: ask
-  // the city right away, then present the advertised RO-H015. Media is sent by
-  // server.js between `specs` and `warranty`.
+  // First reply to a new ad lead: greeting, RO-H015 specs, then (from server.js)
+  // the poster and video, the warranty, and the city question last so the lead
+  // has something to answer. The model name and price are on the poster.
   buildAdvertisedModelOpener(astanaHours) {
-    const product = COMMERCIAL_FACTS.catalogProducts.find(item => item.id === 'ro_h015');
     return {
-      greeting: `${this.getTimeGreeting(astanaHours)} Подскажите пожалуйста, с какого города вы обращаетесь?😊`,
-      specs: `Фильтр RO-H015\nСистема обратного осмоса\n6 ступеней очистки\nБак на 8 литров\nКран входит в комплект\nЦена со скидкой ${formatTenge(product.price)} (в рассрочку ${formatTenge(product.installmentPrice)})`,
+      greeting: this.getTimeGreeting(astanaHours),
+      specs: 'Система обратного осмоса\n6 ступеней очистки\nБак на 8 литров\nКран входит в комплект',
+      cityQuestion: 'Подскажите пожалуйста, с какого вы города?',
       warranty: 'От нас гарантия 3 года и бесплатное сервисное обслуживание 15 лет😊'
     };
   }

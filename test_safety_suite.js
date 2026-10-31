@@ -24,7 +24,8 @@ const tests = [
   'test_successful_sales_analysis.js',
   'test_triggers.js',
   'test_silent_lead_followup.js',
-  'test_company_documents.js'
+  'test_company_documents.js',
+  'test_missed_inbound.js'
 ];
 
 for (const test of tests) {

@@ -19,14 +19,25 @@ check([roH015.price, roH015.installmentPrice, roH015.oldPrice], [65000, 75000, 1
 
 // First reply to a new ad lead.
 const opener = workflow.buildAdvertisedModelOpener(22);
-check(opener.greeting, 'Доброй ночи! Подскажите пожалуйста, с какого города вы обращаетесь?😊', 'opener asks the city first');
-check(workflow.buildAdvertisedModelOpener(9).greeting.startsWith('Доброе утро!'), true, 'opener greets by Astana time');
-check(opener.specs.includes('RO-H015') && opener.specs.includes('65 000 ₸') && opener.specs.includes('75 000 ₸'), true, 'opener names the model and both prices');
+check(opener.greeting, 'Доброй ночи!', 'opener starts with a greeting only');
+check(workflow.buildAdvertisedModelOpener(9).greeting, 'Доброе утро!', 'opener greets by Astana time');
+check(workflow.buildAdvertisedModelOpener(14).greeting, 'Добрый день!', 'afternoon greeting');
+check(workflow.buildAdvertisedModelOpener(19).greeting, 'Добрый вечер!', 'evening greeting');
+check(opener.cityQuestion, 'Подскажите пожалуйста, с какого вы города?', 'opener ends with the city question');
+const openerSendOrder = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8')
+  .slice(fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8').indexOf('async function sendAdvertisedModelOpener'));
+check(openerSendOrder.indexOf('opener.specs') < openerSendOrder.indexOf('RO_H015_OPENER_MEDIA')
+  && openerSendOrder.indexOf('RO_H015_OPENER_MEDIA') < openerSendOrder.indexOf('opener.warranty, opener.cityQuestion'), true, 'order: greeting, specs, media, service, city');
+check(opener.specs, 'Система обратного осмоса\n6 ступеней очистки\nБак на 8 литров\nКран входит в комплект', 'opener specs match the manager');
 check(opener.warranty.includes('3 года') && opener.warranty.includes('15 лет'), true, 'opener warranty');
-check(fs.existsSync(path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_1_main.jpeg')), true, 'opener photo exists');
+check(fs.existsSync(path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_poster_65000.jpeg')), true, 'opener poster exists');
 check(fs.existsSync(path.join(__dirname, 'Vodel content', '01_RO-H015', 'ro_h015_video.mp4')), true, 'opener video exists');
 const serverSource = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8');
-check(/RO_H015_OPENER_MEDIA = \[[^\]]*poster/.test(serverSource), false, 'old-price poster is never sent in the opener');
+const openerMedia = serverSource.match(/RO_H015_OPENER_MEDIA = \[([^\]]*)\]/)[1];
+check(openerMedia.includes('ro_h015_poster_65000.jpeg') && openerMedia.indexOf('poster_65000') < openerMedia.indexOf('video'), true, 'current-price poster goes first, then the video');
+check(/ro_h015_poster\.png/.test(openerMedia), false, 'old-price poster is never sent in the opener');
+const openerSource = serverSource.slice(serverSource.indexOf('async function sendAdvertisedModelOpener'), serverSource.indexOf('async function sendFouraClosingProof'));
+check(/attempt <= 2/.test(openerSource) && /catch \(error\)/.test(openerSource), true, 'opener media is retried and a failed photo does not abort the opener');
 
 for (const [text, expected] of [
   ['Здравствуйте! Можно узнать об этом подробнее?', true],
@@ -43,7 +54,8 @@ const openerHistory = [
   { sender: 'user', text: 'Здравствуйте' },
   { sender: 'ai', text: opener.greeting },
   { sender: 'ai', text: opener.specs },
-  { sender: 'ai', text: opener.warranty }
+  { sender: 'ai', text: opener.warranty },
+  { sender: 'ai', text: opener.cityQuestion }
 ];
 check(analyzeConversationTurn({ text: 'Павлодар', history: openerHistory }).cityReply, true, 'city answer recognised after the opener');
 
