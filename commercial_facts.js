@@ -11,11 +11,6 @@ const COMMERCIAL_FACTS = Object.freeze({
       productId: 'ar01a',
       gifts: ['пылесос', 'аэрогриль'],
       label: 'К AR-01A — один подарок на выбор: пылесос или аэрогриль'
-    },
-    kettleDailyGift: {
-      appliesTo: 'любой фильтр',
-      gift: 'электрический чайник',
-      label: 'Электрический чайник в подарок при покупке любого фильтра VODEL'
     }
   },
   warehouseCities: ['астана', 'astana', 'алматы', 'almaty', 'шымкент', 'shymkent', 'атырау', 'atyrau'],
@@ -325,7 +320,7 @@ function getCommercialFactsForPrompt(policy, contextText = '') {
       ? `ВРЕМЕННАЯ АКЦИЯ: ${COMMERCIAL_FACTS.campaigns.kaspiZero24.label}. Для платежа на 24 месяца используй сумму 0-0-24 конкретной модели. После ${COMMERCIAL_FACTS.campaigns.kaspiZero24.displayEndsOn} не обещай Kaspi 0-0-24.`
       : 'Рассрочка Kaspi на 24 месяца сейчас не подтверждена. Для Kaspi используй только 0-0-12; срок 24 месяца доступен через Halyk/Freedom.',
     `АКЦИИ ИЗ ВЕБ-КАТАЛОГА — актуальный источник условий: ${COMMERCIAL_FACTS.campaigns.ar01GiftChoice.label}. Не говори, что этот подарок неактуален. Для AR-01A можно обещать ровно один из этих двух подарков, не оба сразу.`,
-    `АКЦИИ ИЗ ВЕБ-КАТАЛОГА: ${COMMERCIAL_FACTS.campaigns.kettleDailyGift.label}. Не выдумывай другие подарки и не отрицай эту акцию, если клиент о ней спрашивает.`,
+    'Акция «чайник в подарок» закончилась. Не обещай чайник и другие подарки, кроме подарка к AR-01A. Если клиент спрашивает про чайник, вежливо скажи, что эта акция завершилась.',
     `FOURA 600 GPD: ${formatTenge(foura.cashPrice)}; ${formatInstallmentOptions(foura)}; гарантия ${foura.warrantyYears} года; бесплатное сервисное обслуживание ${foura.freeServiceYears} лет.`,
     'FOURA — прямоточная система без накопительного бака; полупромышленная мембрана 600 GPD очищает воду сразу при открытии крана. Есть TDS-контроль, самоочистка и защита от протечек.',
     `Alkaline Smart (Корейский смарт-фильтр с баком 8 л): ${formatTenge(alkalineSmart.cashPrice)} (акция со скидкой 50%); ${formatInstallmentOptions(alkalineSmart)}; гарантия ${alkalineSmart.warrantyYears} года (36 месяцев); бесплатное сервисное обслуживание ${alkalineSmart.freeServiceYears} лет.`,

@@ -40,7 +40,7 @@ assert.strictEqual(COMMERCIAL_FACTS.catalog.fileName, 'VODEL 19.08 50 проце
 assert.ok(COMMERCIAL_FACTS.catalog.promoCaption.includes('до конца месяца'));
 assert.strictEqual(COMMERCIAL_FACTS.campaigns.kaspiZero24.endsOn, '2026-09-06');
 assert.deepStrictEqual(COMMERCIAL_FACTS.campaigns.ar01GiftChoice.gifts, ['пылесос', 'аэрогриль']);
-assert.strictEqual(COMMERCIAL_FACTS.campaigns.kettleDailyGift.gift, 'электрический чайник');
+assert.strictEqual(COMMERCIAL_FACTS.campaigns.kettleDailyGift, undefined);
 assert.strictEqual(isKaspiZero24Active(new Date('2026-08-27T12:00:00+05:00')), true);
 assert.strictEqual(isKaspiZero24Active(new Date('2026-09-06T12:00:00+05:00')), true);
 assert.strictEqual(isKaspiZero24Active(new Date('2026-09-07T12:00:00+05:00')), false);
@@ -51,7 +51,7 @@ assert.ok(formatInstallmentOptions(COMMERCIAL_FACTS.products.alkaline, new Date(
 assert.ok(getCommercialFactsForPrompt({}, 'Хочу Alkaline G75').includes('120 000'));
 const activePromos = getCommercialFactsForPrompt({}, 'AR-01A: есть подарок и Kaspi 0-0-24?');
 assert.ok(activePromos.includes('пылесос или аэрогриль'));
-assert.ok(activePromos.includes('Электрический чайник'));
+assert.ok(activePromos.includes('Акция «чайник в подарок» закончилась'));
 assert.strictEqual(activePromos.includes('Kaspi 0-0-24'), isKaspiZero24Active());
 assert.strictEqual(
   getCatalogPreviewContext({ title: 'Фильтр Alkaline G75 (White)', description: 'Щелочная вода, бак 8 л', canonicalUrl: 'https://catalog-vodel-kz.pages.dev/' }),
