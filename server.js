@@ -35,7 +35,6 @@ const { isOutgoingFromThisAccount, shouldProcessCustomerInboundMessage } = requi
 const { detectAdvertisedProduct, isEmptyReferralEvent } = require('./ad_context');
 const { classifyNativeBusinessGreeting, purgeNativeBusinessGreetings } = require('./native_business_greeting');
 const { buildDailySalesSummary, formatDailySalesReport, shouldSendDailyReport } = require('./daily_sales_report');
-const { sanitizeCustomerFacingText } = require('./customer_brand_safety');
 const {
   analyzeConversationTurn,
   isRecentAssistantDuplicate,
@@ -702,16 +701,12 @@ async function simulateHumanTyping(chatObj, textLength) {
 
 async function sendAutomatedMessage(chatId, content, options = {}) {
   const isMedia = typeof content !== 'string';
-  const safeContent = isMedia ? content : sanitizeCustomerFacingText(content);
-  const safeOptions = isMedia && typeof options.caption === 'string'
-    ? { ...options, caption: sanitizeCustomerFacingText(options.caption) }
-    : options;
-  const body = isMedia ? (safeOptions.caption || '') : safeContent;
+  const body = isMedia ? (options.caption || '') : content;
   // whatsapp-web.js emits message_create for our own sends too. Record the
   // expected echo before sending so the Smart Takeover listener cannot mistake
   // the bot's welcome or reply for a message from the operator's phone.
   automatedOutboundGuard.mark(chatId, { body, isMedia });
-  return client.sendMessage(chatId, safeContent, safeOptions);
+  return client.sendMessage(chatId, content, options);
 }
 
 async function handoverWithAcknowledgement({ chatId, chatName, acknowledgement, notification, notificationFlag }) {
@@ -2216,7 +2211,7 @@ async function handleInboundMessage(msg) {
   // RO-H015 has its own photos, video and size image in Vodel content/01_RO-H015.
   const isRoH015Context = resolveLatestCatalogProduct(chats[chatId].messages, textContent)?.id === 'ro_h015';
   const isExplicitFouraRequest = /(?:foura|фоура|фоур\w*)/i.test(lowerUserText);
-  const isDirectTanklessSelection = /без\s*(?:бака|бачка)|безбачков|прямоточ/i.test(lowerUserText);
+  const isDirectTanklessSelection = /без\s*(?:бака|бачка)|баксыз|безбачков|прямоточ/i.test(lowerUserText);
   const isConfirmedTanklessChoice = isDirectTanklessSelection || (chats[chatId].advertisedProduct === 'foura' && turnContext.affirmative && /без\s+накопительного\s+бака|foura/i.test(turnContext.previousAssistant));
   const isConfirmedTankChoice = /(?:с|c)\s*(?:накопительным\s*)?(?:баком|бачком)|баковый/i.test(lowerUserText) && !isDirectTanklessSelection;
   const isFouraNoTankContext = isExplicitFouraRequest || isDirectTanklessSelection || isConfirmedTanklessChoice || chats[chatId].advertisedProduct === 'foura';
@@ -2408,6 +2403,21 @@ async function handleInboundMessage(msg) {
     chats[chatId].albumSent.foura = true;
     savePersistentData();
     await sendPic('foura.pdf', '✨ Прямоточный смарт-фильтр VODEL FOURA 600 GPD (Презентация и характеристики)');
+  }
+
+  // 4.1. FOURA presentation without waiting for a request: once per chat, as
+  // soon as the dialogue is about FOURA (the customer wants a tankless filter
+  // or names FOURA, or this reply presents FOURA). Not when the customer has
+  // just turned FOURA down or asks for a price proof or a certificate.
+  const customerTurnsFouraDown = /басқа|баска|другой|друг(?:ие|ую)|не\s+интерес|не\s+подход|дорог|қымбат|кымбат|дешевле|арзан/i.test(lowerUserText);
+  const dialogueIsAboutFoura = isFouraNoTankContext || /foura|фоура/i.test(lowerAiReply);
+  if (dialogueIsAboutFoura && !customerTurnsFouraDown && !chats[chatId].albumSent.foura
+    && !isExplicitKaspiOrProof && !isCertificateRequested && !shouldSendProductCatalog) {
+    try {
+      await sendFouraPresentationBundle(chatId, chatObj, chats[chatId]);
+    } catch (error) {
+      console.error('FOURA presentation bundle failed:', error.message || error);
+    }
   }
 
   // 5. ПРЕЗЕНТАЦИЯ ALKALINE G75 (PDF презентация)

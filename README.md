@@ -56,7 +56,6 @@ Node.js 18+, Express + express-ws, whatsapp-web.js (Puppeteer/Chromium), `@googl
 | `ad_context.js`, `native_business_greeting.js` | Контекст рекламы и шаблонные приветствия WhatsApp Business |
 | `follow_up_suggestions.js`, `alkaline_silence_followup.js` | Повторные касания молчащих клиентов |
 | `daily_sales_report.js`, `successful_sales_analysis.js` | Отчёт по продажам и разбор успешных диалогов |
-| `customer_brand_safety.js` | Очистка клиентских сообщений от старого бренда |
 | `scripts/supervise_bot.js`, `scripts/start_bot.ps1` | Супервизор (один процесс бота, перезапуск, watchdog) и автозапуск в Windows |
 | `public/` | Веб-панель оператора (`index.html`, `app.js`) и старая копия каталога |
 | `Vodel content/*/info.txt` | Карточки моделей (фото/видео хранятся только локально, в git их нет) |

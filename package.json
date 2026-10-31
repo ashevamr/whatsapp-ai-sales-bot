@@ -4,7 +4,7 @@
   "description": "WhatsApp AI Sales Bot for VODEL using Gemini API & Node.js",
   "main": "server.js",
   "scripts": {
-    "start": "node scripts/supervise_bot.js",
+    "start": "node scripts/patch_whatsapp_web.js && node scripts/supervise_bot.js",
     "dev": "nodemon server.js",
     "test:reply-shape": "node test_response_format.js",
     "test:commercial-facts": "node test_commercial_facts.js",
@@ -14,7 +14,8 @@
     "test:follow-up-suggestions": "node test_follow_up_suggestions.js",
     "test:success-case-analysis": "node test_successful_sales_analysis.js",
     "test:safety": "node test_safety_suite.js",
-    "test:live-safety": "node test_live_safety_dialogues.js"
+    "test:live-safety": "node test_live_safety_dialogues.js",
+    "postinstall": "node scripts/patch_whatsapp_web.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

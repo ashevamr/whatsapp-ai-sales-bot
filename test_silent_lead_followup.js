@@ -19,10 +19,10 @@ check([roH015.price, roH015.installmentPrice, roH015.oldPrice], [65000, 75000, 1
 
 // First reply to a new ad lead.
 const opener = workflow.buildAdvertisedModelOpener(22);
-check(opener.greeting, 'Доброй ночи!', 'opener starts with a greeting only');
-check(workflow.buildAdvertisedModelOpener(9).greeting, 'Доброе утро!', 'opener greets by Astana time');
-check(workflow.buildAdvertisedModelOpener(14).greeting, 'Добрый день!', 'afternoon greeting');
-check(workflow.buildAdvertisedModelOpener(19).greeting, 'Добрый вечер!', 'evening greeting');
+check(opener.greeting, 'Доброй ночи! Вас приветствует компания VODEL 💧', 'opener starts with a greeting only');
+check(workflow.buildAdvertisedModelOpener(9).greeting, 'Доброе утро! Вас приветствует компания VODEL 💧', 'opener greets by Astana time');
+check(workflow.buildAdvertisedModelOpener(14).greeting, 'Добрый день! Вас приветствует компания VODEL 💧', 'afternoon greeting');
+check(workflow.buildAdvertisedModelOpener(19).greeting, 'Добрый вечер! Вас приветствует компания VODEL 💧', 'evening greeting');
 check(opener.cityQuestion, 'Подскажите пожалуйста, с какого вы города?', 'opener ends with the city question');
 const openerSendOrder = fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8')
   .slice(fs.readFileSync(path.join(__dirname, 'server.js'), 'utf8').indexOf('async function sendAdvertisedModelOpener'));

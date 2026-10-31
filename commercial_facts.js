@@ -147,7 +147,7 @@ const COMMERCIAL_FACTS = Object.freeze({
     { id: 'ravent_lux', name: 'Фильтр RAVENT LUX', origin: 'Турция', price: 170000, oldPrice: 340000, stages: 6, tank: 'Бак 8 л', category: 'Классический с баком', features: 'Насос подачи давления, регулятор давления, датчик от протечки' },
     { id: 'ro_wt01', name: 'Фильтр RO - WT 01', origin: 'Южная Корея', price: 180000, oldPrice: 360000, stages: 5, tank: 'Бак 8 л', category: 'Смарт с баком', features: 'Сенсорная панель, щелочная вода, двойной кран с насосом' },
     { id: 'foura_600gpd', name: 'Фильтр FOURA 600 GPD (БЕЗ БАКА)', origin: 'Южная Корея', price: 185000, oldPrice: 370000, stages: 5, tank: 'БЕЗ БАКА (600 GPD прямоток)', category: 'Прямоточный без бака (Главный Флагман)', features: 'Мембрана 600 GPD, TDS-дисплей в реальном времени, щелочная турмалин + минеральная, самоочистка, антипотоп, 16 см корпус' },
-    { id: 'wt02_direct', name: 'Фильтр WT-02 БЕЗ БАКА', origin: 'Южная Корея', price: 250000, oldPrice: 500000, stages: 6, tank: 'БЕЗ БАКА (600 GPD прямоток)', category: 'Прямоточный без бака', features: 'Мембрана 600 GPD, сенсорный TDS дисплей, антипотоп, датчик давления' },
+    { id: 'wt02_direct', name: 'Фильтр WT-02 БЕЗ БАКА', origin: 'Южная Корея', price: 150000, installmentPrice: 160000, oldPrice: 250000, stages: 6, tank: 'БЕЗ БАКА (600 GPD прямоток)', category: 'Прямоточный без бака', features: 'Мембрана 600 GPD, сенсорный TDS дисплей, антипотоп, датчик давления' },
     { id: 'ar01a', name: 'Фильтр AR-01A', origin: 'Южная Корея', price: 250000, oldPrice: 500000, stages: 6, tank: 'Бак 8 л', category: 'Смарт с баком (Премиум)', features: 'Премиум Корея, 6 ступеней, двойной кран, антипотоп и датчик давления' },
     { id: 'ro_wt02_usa', name: 'Фильтр RO WT -02 (USA)', origin: 'США', price: 250000, oldPrice: 500000, stages: 6, tank: 'Бак 8 л', category: 'Смарт с баком (США)', features: 'Премиум США, сенсорный экран с TDS, щелочная и минерализованная вода' },
     { id: 'hydrogen_o1', name: 'Фильтр HYDROGEN O1 (Водородная вода)', origin: 'Южная Корея', price: 400000, oldPrice: 800000, stages: 7, tank: '375 л/сутки прямоток', category: 'Водородный Премиум (H2)', features: 'Водородная вода H2 + щелочная вода, природный антиоксидант, 375 л/сутки, сенсорный дисплей' },
@@ -264,7 +264,9 @@ function detectCatalogModelsInText(text) {
     { id: 'ravent_lux', regex: /ravent\s*lux|равент\s*люкс/i },
     { id: 'ro_wt01', regex: /ro[\s-]?wt[\s-]?01|wt[\s-]?01/i },
     { id: 'foura_600gpd', regex: /foura|фоура|600\s*gpd|прямоточ.*185/i },
-    { id: 'wt02_direct', regex: /wt[\s-]?02\s*(?:без\s*бака|прямоточ)/i },
+    // A plain "WT-02" (or "Alkaline WT-02") means the tankless model; only
+    // "WT-02 USA/США" is the tank version below.
+    { id: 'wt02_direct', regex: /wt[\s-]?02(?![\s()\-]*(?:usa|сша))/i },
     { id: 'ar01a', regex: /ar[\s-]?01a?|ар[\s-]?01/i },
     { id: 'ro_wt02_usa', regex: /ro[\s-]*wt[\s-]*02[\s()\-]*(?:usa|сша)|wt[\s-]*02[\s()\-]*(?:usa|сша)/i },
     { id: 'hydrogen_o1', regex: /hydrogen\s*o?1|водородн.*o?1|водородн.*375/i },
@@ -330,6 +332,14 @@ function getCommercialFactsForPrompt(policy, contextText = '') {
     'Бесплатный сервис означает выезд и работу мастера (15 лет); расходные картриджи оплачиваются отдельно.',
     'Не называй остатки товара или цену следующей поставки: актуальный остаток не задан в коммерческих фактах.'
   ];
+
+  // The second tankless model must be known even before the customer names it:
+  // it is the answer to "другой вариант без бака" after FOURA.
+  const wt02 = COMMERCIAL_FACTS.catalogProducts.find(product => product.id === 'wt02_direct');
+  if (wt02) {
+    facts.push(`ВТОРОЙ ВАРИАНТ БЕЗ БАКА — ${wt02.name}: ${formatTenge(wt02.price)} при полной оплате или ${formatTenge(wt02.installmentPrice)} в рассрочку (Kaspi 0-0-12 — около ${formatTenge(Math.round(wt02.installmentPrice / 12))} в месяц; Halyk/Freedom 0-0-24 — около ${formatTenge(Math.round(wt02.installmentPrice / 24))} в месяц). Он дешевле FOURA. Предлагай его, когда клиенту без бака нужен другой или более доступный вариант, чем FOURA.`);
+  }
+  facts.push('Презентацию FOURA система отправляет сама, как только речь заходит о FOURA. Не спрашивай «отправить презентацию?» и не обещай её отдельно.');
 
   // If customer message or context mentions specific catalog models, append their facts
   const detectedModels = detectCatalogModelsInText(contextText);

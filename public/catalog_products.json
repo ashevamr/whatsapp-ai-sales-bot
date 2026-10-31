@@ -378,11 +378,12 @@
             "Щелочная и минерализованная вода",
             "36 месяцев гарантии"
         ],
-        "oldPrice": 500000,
-        "price": 250000,
-        "discountPercent": 50,
-        "monthlyKaspi": 20830,
-        "monthlyHalyk": 10415,
+        "oldPrice": 250000,
+        "price": 150000,
+        "installmentPrice": 160000,
+        "discountPercent": 40,
+        "monthlyKaspi": 13333,
+        "monthlyHalyk": 6667,
         "badge": "600 GPD Прямоток",
         "pdfPage": 13,
         "image": "./catalog_assets/wt02_direct_page.png"

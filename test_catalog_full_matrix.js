@@ -223,8 +223,8 @@ for (const product of products) {
   });
   check(`${product.id}: discount badge matches prices`, () => {
     assert.strictEqual(product.discountPercent, Math.round((1 - product.price / product.oldPrice) * 100));
-    // The advertised RO-H015 has its own ad price; every other model keeps the 50% campaign.
-    if (product.id !== 'ro_h015') assert.strictEqual(product.oldPrice, product.price * 2);
+    // RO-H015 and WT-02 have their own prices; every other model keeps the 50% campaign.
+    if (!['ro_h015', 'wt02_direct'].includes(product.id)) assert.strictEqual(product.oldPrice, product.price * 2);
   });
   check(`${product.id}: Kaspi 12-month arithmetic`, () => {
     const financedTotal = product.installmentPrice || product.price;
