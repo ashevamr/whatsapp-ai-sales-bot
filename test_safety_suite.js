@@ -6,6 +6,7 @@ const tests = [
   'test_all_scenarios.js',
   'test_ad_context.js',
   'test_whatsapp_web_patch.js',
+  'test_cartridge_gift_followup.js',
   'test_automated_outbound_guard.js',
   'test_inbound_message_guard.js',
   'test_automation_safety.js',

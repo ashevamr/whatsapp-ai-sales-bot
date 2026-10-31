@@ -36,6 +36,12 @@ const { detectAdvertisedProduct, isEmptyReferralEvent } = require('./ad_context'
 const { classifyNativeBusinessGreeting, purgeNativeBusinessGreetings } = require('./native_business_greeting');
 const { buildDailySalesSummary, formatDailySalesReport, shouldSendDailyReport } = require('./daily_sales_report');
 const {
+  CARTRIDGE_GIFT_DELAY_MS,
+  isCartridgeQuestion,
+  canSendCartridgeGiftFollowUp,
+  buildCartridgeGiftFollowUp
+} = require('./cartridge_gift_followup');
+const {
   analyzeConversationTurn,
   isRecentAssistantDuplicate,
   isBurstDuplicateCustomerMessage,
@@ -179,6 +185,7 @@ const filterTypeFollowUpTimers = new Map();
 const FILTER_TYPE_FOLLOW_UP_DELAY_MS = 3 * 60 * 1000;
 const MAX_REMINDER_RESTART_OVERDUE_MS = 60 * 1000;
 const alkalineSilenceFollowUpTimers = new Map();
+const cartridgeGiftFollowUpTimers = new Map();
 const ALKALINE_SILENCE_FOLLOW_UP_DELAY_MS = 3 * 60 * 1000;
 const automatedOutboundGuard = createAutomatedOutboundGuard();
 
@@ -1317,6 +1324,77 @@ function restorePendingAlkalineSilenceFollowUps() {
   savePersistentData();
 }
 
+function cancelCartridgeGiftFollowUp(chatId, { clearDeadline = false } = {}) {
+  const timer = cartridgeGiftFollowUpTimers.get(chatId);
+  if (timer) clearTimeout(timer);
+  cartridgeGiftFollowUpTimers.delete(chatId);
+  if (clearDeadline && chats[chatId]) chats[chatId].cartridgeGiftFollowUpDueAt = null;
+}
+
+// After an RO-H015 cartridge answer: 20 minutes of silence in a warehouse city
+// brings the offer of the first replacement as a gift, once per chat.
+function scheduleCartridgeGiftFollowUp(chatId, { preserveDeadline = false } = {}) {
+  cancelCartridgeGiftFollowUp(chatId);
+  if (!canAutomateChat(chatId)) return;
+  const scheduledChat = chats[chatId];
+  if (!scheduledChat || scheduledChat.cartridgeGiftFollowUpSent) return;
+  const storedDeadline = Date.parse(scheduledChat.cartridgeGiftFollowUpDueAt || '');
+  const deadline = preserveDeadline && Number.isFinite(storedDeadline)
+    ? storedDeadline
+    : Date.now() + CARTRIDGE_GIFT_DELAY_MS;
+  scheduledChat.cartridgeGiftFollowUpDueAt = new Date(deadline).toISOString();
+  savePersistentData();
+
+  const timer = setTimeout(async () => {
+    cartridgeGiftFollowUpTimers.delete(chatId);
+    const chat = chats[chatId];
+    const latestMessage = chat?.messages?.[chat.messages.length - 1];
+    const isEligible = canSendCartridgeGiftFollowUp({
+      autoReplyAllowed: getAutoReplySafety().allowed && canAutomateChat(chatId),
+      chatExists: Boolean(chat),
+      chatStatus: chat?.status,
+      latestSender: latestMessage?.sender,
+      alreadySent: Boolean(chat?.cartridgeGiftFollowUpSent),
+      warehouseCityKnown: getCommercialConversationPolicy(chat?.messages || [], '').warehouseCityKnown
+    });
+    if (chat) chat.cartridgeGiftFollowUpDueAt = null;
+    if (!isEligible) {
+      savePersistentData();
+      return;
+    }
+
+    const text = buildCartridgeGiftFollowUp(detectCustomerLanguage('', chat.messages));
+    try {
+      await sendAutomatedMessage(chatId, text);
+      chat.cartridgeGiftFollowUpSent = true;
+      const botMsg = { sender: 'ai', text, timestamp: new Date().toISOString() };
+      chat.messages.push(botMsg);
+      savePersistentData();
+      broadcast('new_message', { chatId, message: botMsg, chat });
+      updateChatAnalytics(chatId);
+    } catch (error) {
+      console.error('Cartridge gift follow-up failed:', error.message || error);
+    }
+  }, Math.max(250, deadline - Date.now()));
+  cartridgeGiftFollowUpTimers.set(chatId, timer);
+}
+
+function restorePendingCartridgeGiftFollowUps() {
+  const now = Date.now();
+  for (const [chatId, chat] of Object.entries(chats)) {
+    if (!canAutomateChat(chatId)) continue;
+    const deadline = Date.parse(chat?.cartridgeGiftFollowUpDueAt || '');
+    if (!Number.isFinite(deadline)) continue;
+    // Never replay an overdue offer after downtime.
+    if (deadline <= now) {
+      chat.cartridgeGiftFollowUpDueAt = null;
+      continue;
+    }
+    scheduleCartridgeGiftFollowUp(chatId, { preserveDeadline: true });
+  }
+  savePersistentData();
+}
+
 client.on('qr', (qr) => {
   authenticationRequired = true;
   console.log('--- SCAN QR CODE ---');
@@ -1371,6 +1449,7 @@ client.on('ready', () => {
   beginStartupSafetyHold();
   restorePendingProductMenuReminders();
   restorePendingAlkalineSilenceFollowUps();
+  restorePendingCartridgeGiftFollowUps();
   void maybeSendDailySalesReport();
   broadcast('status', { status: clientStatus });
   broadcast('bot_config_change', getBotConfig());
@@ -1725,6 +1804,7 @@ async function handleInboundMessage(msg) {
   const isFirstBotReplyInChat = !chats[chatId].messages.some(message => message.sender === 'ai' || message.sender === 'human');
   cancelFilterTypeFollowUp(chatId, { clearDeadline: true });
   cancelAlkalineSilenceFollowUp(chatId, { clearDeadline: true });
+  cancelCartridgeGiftFollowUp(chatId, { clearDeadline: true });
 
   const userMsg = {
     sender: 'user',
@@ -2381,6 +2461,14 @@ async function handleInboundMessage(msg) {
       roH015Sent.video = true;
       savePersistentData();
       await sendPic(path.join(roH015Dir, 'ro_h015_video.mp4'), '🎥 Видео фильтра RO-H015');
+    }
+    if (isCartridgeQuestion(lowerUserText)) {
+      if (!roH015Sent.cartridges) {
+        roH015Sent.cartridges = true;
+        savePersistentData();
+        await sendPic(path.join(roH015Dir, 'ro_h015_kartridzhi.jpeg'), '🔄 Замена картриджей RO-H015: через 6–9 месяцев 3 картриджа — 15 500 ₸, затем раз в год все 6 картриджей — 19 500 ₸');
+      }
+      if (!chats[chatId].cartridgeGiftFollowUpSent) scheduleCartridgeGiftFollowUp(chatId);
     }
   }
 
