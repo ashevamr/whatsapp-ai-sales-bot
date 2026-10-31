@@ -1,0 +1,51 @@
+# ── Secrets ─────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── WhatsApp session (logged-in account — never commit) ─
+.wwebjs_auth/
+.wwebjs_cache/
+
+# ── Customer data and runtime state ─────────────────────
+# Real conversations, phone numbers and chat ids. Examples live in examples/.
+chats_store.json
+sales_store.json
+inbound_ledger.json
+daily_report_state.json
+bot_runtime_config.json
+successful_sales_playbook.json
+example sale.txt
+logs of what happen.txt
+ERROR.jpeg
+analysis/
+scratch/
+tmp/
+
+# ── Logs ────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Dependencies and generated output ───────────────────
+node_modules/
+graphify-out/
+
+# ── Business media (large; kept on the bot machine) ─────
+# Product facts (info.txt) are versioned, photos/videos/PDFs are not.
+Vodel content/**/*.mp4
+Vodel content/**/*.mov
+Vodel content/**/*.pdf
+Vodel content/**/*.png
+Vodel content/**/*.jpg
+Vodel content/**/*.jpeg
+Vodel content/foura white backround
+pictures/
+
+# ── Old copies of the public catalog (lives in its own repo: catalog-vodel) ─
+catalog-site/
+public/catalog_assets/
+
+# ── Local tool configs ──────────────────────────────────
+.agents/
+.codex/
+.claude/

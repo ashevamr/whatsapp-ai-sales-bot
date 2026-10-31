@@ -1,0 +1,16 @@
+{
+  "watch": [
+    "server.js",
+    "ai_workflow.js",
+    ".env"
+  ],
+  "ext": "js,json,env,md",
+  "ignore": [
+    ".wwebjs_auth/*",
+    ".wwebjs_cache/*",
+    "chats_store.json",
+    "sales_store.json",
+    "pictures/*",
+    "node_modules/*"
+  ]
+}

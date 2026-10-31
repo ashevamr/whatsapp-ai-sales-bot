@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!--
+THESIS: A premium dark water-technology showroom with deep oceanic surfaces, crisp typography, electric cyan and emerald accents.
+OWN-WORLD: Midnight obsidian canvas, dark glassmorphism, luminous water-tech glows, and high-contrast retail price boards.
+STORY: See today’s offers, understand the buying terms, compare verified models, then continue in WhatsApp.
+FIRST VIEWPORT: Red Kaspi ticker, dark glass nav, two image-led offer notices, and the water-tech catalog promise.
+-->
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Каталог фильтров для воды VODEL | Официальный каталог со скидкой 50%</title>
+  <meta name="description" content="Официальный каталог бытовых и полупромышленных фильтров для воды VODEL в Казахстане. Скидки 50%, рассрочка 0-0-12 и 0-0-24, гарантия и сервис.">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./catalog.css">
+</head>
+<body class="bg-[#060b18] text-slate-100 font-sans min-h-screen flex flex-col selection:bg-sky-500/30 selection:text-sky-200 pb-32 relative overflow-x-hidden">
+
+  <!-- Background Ambient Glows -->
+  <div class="fixed top-[-10%] left-1/4 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+  <div class="fixed top-[40%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[160px] pointer-events-none -z-10"></div>
+  <div class="fixed bottom-0 left-[-5%] w-[600px] h-[600px] bg-cyan-500/8 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+  <!-- Kaspi Ticker -->
+  <aside id="kaspiCampaignTicker" aria-label="Kaspi 0-0-24 до 6 сентября" class="promo-ticker sticky top-0 z-50 bg-gradient-to-r from-red-600 via-rose-600 to-red-600 text-white shadow-md">
+    <div class="promo-ticker-track py-2 text-xs sm:text-sm font-extrabold tracking-wide">
+      <div class="promo-ticker-group">
+        <span>🔥 KASPI 0-0-24 ДО 6 СЕНТЯБРЯ</span><span>БЕЗ ПЕРЕПЛАТ</span><span>УСПЕЙТЕ ОФОРМИТЬ</span>
+      </div>
+      <div class="promo-ticker-group" aria-hidden="true">
+        <span>🔥 KASPI 0-0-24 ДО 6 СЕНТЯБРЯ</span><span>БЕЗ ПЕРЕПЛАТ</span><span>УСПЕЙТЕ ОФОРМИТЬ</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sticky Header -->
+  <header class="border-b border-slate-800/80 bg-[#060b18]/85 backdrop-blur-xl sticky top-[34px] z-40 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <a href="./catalog.html" class="flex items-center gap-3 group" aria-label="VODEL — на главную каталога">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-slate-950 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.35)] group-hover:scale-105 transition-transform">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        </span>
+        <span>
+          <span class="block font-display text-xl sm:text-2xl font-extrabold tracking-[-0.03em] text-white">VODEL</span>
+          <span class="hidden sm:block text-[10px] font-bold text-sky-400 -mt-1">Технологии чистой воды</span>
+        </span>
+      </a>
+
+      <div class="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
+        <span class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/60 border border-slate-800">🛡️ Гарантия 3 года</span>
+        <span class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/60 border border-slate-800">🔧 Сервис 15 лет</span>
+        <span class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/60 border border-slate-800">🇰🇿 Склады в 4 городах</span>
+      </div>
+
+      <a id="headerWhatsappBtn" href="https://wa.me/77004790001?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%AF%20%D0%BF%D0%B5%D1%80%D0%B5%D1%88%D1%91%D0%BB%28%D0%B0%29%20%D1%81%20%D1%81%D0%B0%D0%B9%D1%82%D0%B0%20VODEL%20%D0%B8%20%D1%85%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%20%D0%B4%D0%BB%D1%8F%20%D0%B2%D0%BE%D0%B4%D1%8B.%20%D0%9F%D0%BE%D0%B4%D1%81%D0%BA%D0%B0%D0%B6%D0%B8%D1%82%D0%B5%2C%20%D0%BF%D0%BE%D0%B6%D0%B0%D0%BB%D1%83%D0%B9%D1%81%D1%82%D0%B0%2C%20%D1%81%20%D1%87%D0%B5%D0%B3%D0%BE%20%D0%BD%D0%B0%D1%87%D0%B0%D1%82%D1%8C%3F" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-whatsapp hover:brightness-110 text-slate-950 font-extrabold px-4 py-2.5 rounded-xl text-sm transition-all shadow-[0_0_20px_rgba(37,211,102,0.25)] hover:shadow-[0_0_25px_rgba(37,211,102,0.4)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.158.575 4.181 1.579 5.926l-1.681 6.143 6.299-1.652c1.701.928 3.647 1.455 5.717 1.455 6.627 0 12-5.373 12-12 0-6.627-5.373-12-12-12z"/></svg>
+        <span class="hidden sm:inline">Написать в WhatsApp</span>
+        <span class="sm:hidden">WhatsApp</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <!-- Top Promotion Badges Grid -->
+    <section id="promotionAlerts" aria-label="Акции VODEL" class="px-4 sm:px-6 lg:px-8 pt-5">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-3 min-w-0 w-full">
+        <article class="min-w-0 w-full bg-slate-900/80 border border-slate-800 hover:border-sky-500/30 rounded-2xl p-3 flex items-center gap-3 shadow-lg backdrop-blur-md transition-all">
+          <div class="flex -space-x-3 shrink-0" aria-hidden="true">
+            <img src="./catalog_assets/ar01a_page.png" alt="" class="w-14 h-14 rounded-xl bg-slate-950 border-2 border-slate-800 object-contain p-1">
+            <img src="./catalog_assets/promo-vacuum.png" alt="" class="w-14 h-14 rounded-xl bg-slate-950 border-2 border-slate-800 object-contain p-1">
+            <img src="./catalog_assets/promo-air-fryer.png" alt="" class="w-14 h-14 rounded-xl bg-slate-950 border-2 border-slate-800 object-contain p-1">
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[11px] font-extrabold text-red-400 uppercase tracking-wide">ПОДАРОК НА ВЫБОР</p>
+            <p class="text-sm font-extrabold text-slate-100 truncate">AR-01A + пылесос или аэрогриль</p>
+          </div>
+          <a href="#ar01Promo" class="shrink-0 text-xs font-extrabold text-sky-400 hover:text-white px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:bg-slate-700 transition-colors">Подробнее</a>
+        </article>
+        <article class="min-w-0 w-full bg-slate-900/80 border border-slate-800 hover:border-sky-500/30 rounded-2xl p-3 flex items-center gap-3 shadow-lg backdrop-blur-md transition-all">
+          <img src="./catalog_assets/promo-kettle.png" alt="" class="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 object-contain shrink-0 p-1" aria-hidden="true">
+          <div class="min-w-0 flex-1">
+            <p class="text-[11px] font-extrabold text-sky-400 uppercase tracking-wide">ТОЛЬКО СЕГОДНЯ, <span id="kettlePromoDateAlert" data-kettle-promo-date>27 АВГУСТА</span></p>
+            <p class="text-sm font-extrabold text-slate-100 truncate">Чайник к любому фильтру</p>
+          </div>
+          <a href="#kettlePromo" class="shrink-0 text-xs font-extrabold text-sky-400 hover:text-white px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/80 hover:bg-slate-700 transition-colors">Подробнее</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Main Hero Banner -->
+    <section class="px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      <div class="max-w-7xl mx-auto overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900/95 via-[#0b162c]/95 to-slate-950/95 border border-sky-500/20 text-white shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md relative">
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="grid lg:grid-cols-[1.35fr_0.65fr] relative z-10">
+          <div class="p-6 sm:p-9 lg:p-12">
+            <p class="inline-flex items-center gap-2 text-xs font-extrabold text-sky-300 mb-4 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/25">
+              <span class="w-2 h-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>Официальный каталог VODEL · 2026
+            </p>
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-0.04em] leading-[1.08] max-w-4xl text-white">Чистая вода дома — без сложного выбора</h1>
+            <p class="mt-5 text-sm sm:text-lg text-slate-300 max-w-2xl leading-relaxed">Сравните модели, цену и платежи. Можно выбрать до трёх фильтров — Акбота поможет понять, какой подойдёт именно вам.</p>
+            <a href="#catalogControls" class="mt-7 inline-flex items-center justify-center bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-300 hover:to-blue-400 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl transition-all shadow-[0_0_25px_rgba(56,189,248,0.35)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-400">Смотреть модели ↓</a>
+          </div>
+          <div class="grid grid-cols-2 lg:grid-cols-1 bg-slate-950/60 text-slate-100 border-t lg:border-t-0 lg:border-l border-slate-800/80">
+            <div class="p-6 sm:p-8 border-r lg:border-r-0 lg:border-b border-slate-800/80 flex flex-col justify-center">
+              <span class="text-3xl" aria-hidden="true">🛡️</span>
+              <p class="mt-2 text-xs font-bold text-slate-400">Гарантия на все модели</p>
+              <p class="text-xl font-extrabold text-white">3 года</p>
+            </div>
+            <div class="p-6 sm:p-8 flex flex-col justify-center">
+              <span class="text-3xl" aria-hidden="true">🔧</span>
+              <p class="mt-2 text-xs font-bold text-slate-400">Бесплатный сервис мастера</p>
+              <p class="text-xl font-extrabold text-sky-400">15 лет</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detailed Promotions Section -->
+    <section id="promotions" aria-labelledby="promotionsTitle" class="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <p class="text-sm font-extrabold text-sky-400">Актуальные предложения</p>
+            <h2 id="promotionsTitle" class="mt-1 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white">Подарки к фильтрам</h2>
+          </div>
+          <span class="hidden sm:inline text-sm font-semibold text-slate-400">Количество подарков ограничено</span>
+        </div>
+
+        <div class="grid lg:grid-cols-[1.45fr_0.85fr] gap-5">
+          <!-- AR-01A Promo Card -->
+          <article id="ar01Promo" class="promo-card overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 hover:border-sky-500/40 shadow-xl backdrop-blur-md transition-all">
+            <div class="grid md:grid-cols-[0.92fr_1.08fr] min-h-full">
+              <div class="relative bg-slate-950/80 p-4 sm:p-6 grid grid-cols-2 gap-3 border-b md:border-b-0 md:border-r border-slate-800/80">
+                <figure class="col-span-2 rounded-2xl bg-slate-950 border border-slate-800/80 overflow-hidden flex items-center justify-center p-2 min-h-[300px] sm:min-h-[360px]">
+                  <img src="./catalog_assets/ar01a_page.png" alt="Фильтр VODEL AR-01A" class="w-full h-80 sm:h-96 md:h-[420px] object-contain hover:scale-105 transition-transform duration-300" loading="eager">
+                </figure>
+                <figure class="rounded-2xl bg-slate-900/90 border border-slate-800/80 overflow-hidden aspect-square flex items-center justify-center p-2">
+                  <img src="./catalog_assets/promo-vacuum.png" alt="Пылесос — подарок на выбор к AR-01A" class="w-full h-full object-contain" loading="eager">
+                </figure>
+                <figure class="rounded-2xl bg-slate-900/90 border border-slate-800/80 overflow-hidden aspect-square flex items-center justify-center p-2">
+                  <img src="./catalog_assets/promo-air-fryer.png" alt="Аэрогриль — подарок на выбор к AR-01A" class="w-full h-full object-cover" loading="eager">
+                </figure>
+              </div>
+              <div class="p-6 sm:p-8 flex flex-col justify-center">
+                <span class="self-start text-xs font-extrabold text-red-400 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg uppercase tracking-wide">ПОДАРОК НА ВЫБОР</span>
+                <h3 class="mt-4 text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] text-white">AR-01A + пылесос или аэрогриль</h3>
+                <p class="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">Покупаете корейский смарт-фильтр AR-01A — выбираете один подарок: пылесос или аэрогриль.</p>
+                <div class="mt-5 flex items-baseline gap-3">
+                  <span class="text-3xl font-extrabold text-sky-400 tabular-nums">250 000 ₸</span>
+                  <span class="text-sm text-slate-500 line-through">500 000 ₸</span>
+                </div>
+                <button id="arPromoDetailsBtn" type="button" class="mt-6 self-start bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold px-5 py-3 rounded-xl transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-400">Подробнее об AR-01A</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Kettle Promo Card -->
+          <article id="kettlePromo" class="promo-card overflow-hidden rounded-3xl bg-slate-900/80 border border-slate-800 hover:border-sky-500/40 shadow-xl backdrop-blur-md transition-all">
+            <div class="h-full flex flex-col">
+              <div class="bg-slate-950/80 border-b border-slate-800/80 flex items-center justify-center overflow-hidden p-3 sm:p-4">
+                <img src="./catalog_assets/promo-kettle.png" alt="Электрический чайник — подарок к любому фильтру" class="w-full h-72 sm:h-80 md:h-96 object-contain rounded-2xl hover:scale-105 transition-transform duration-300" loading="eager">
+              </div>
+              <div class="p-6 sm:p-7 flex-1 flex flex-col justify-between">
+                <div>
+                  <span class="text-xs font-extrabold text-sky-400 uppercase tracking-wide">ПОДАРОК К ЛЮБОЙ МОДЕЛИ</span>
+                  <h3 class="mt-2 text-2xl font-extrabold tracking-[-0.03em] text-white">Только сегодня, <span id="kettlePromoDate" data-kettle-promo-date>27 августа</span></h3>
+                  <p class="mt-3 text-sm text-slate-300 leading-relaxed">Электрический чайник в подарок при покупке любого фильтра VODEL.</p>
+                </div>
+                <button id="kettlePromoShopBtn" type="button" class="mt-6 self-start border border-slate-700 bg-slate-800 hover:bg-slate-700 text-sky-300 hover:text-white font-extrabold px-5 py-3 rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-400">Выбрать фильтр</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Purchase Terms Strip -->
+    <section class="bg-slate-900/60 border-y border-slate-800/80 py-8 backdrop-blur-sm" aria-label="Условия покупки">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <div><p class="text-xs font-bold text-slate-400">Банки для рассрочки</p><p class="mt-1 font-extrabold text-slate-100 text-sm sm:text-base">Kaspi, Freedom, Halyk</p></div>
+        <div><p class="text-xs font-bold text-slate-400">Рассрочка</p><p class="mt-1 font-extrabold text-slate-100 text-sm sm:text-base">0-0-12 и 0-0-24</p></div>
+        <div><p class="text-xs font-bold text-slate-400">Происхождение</p><p class="mt-1 font-extrabold text-slate-100 text-sm sm:text-base">Корея, США, Германия, Турция</p></div>
+        <div><p class="text-xs font-bold text-slate-400">Консультация</p><p class="mt-1 font-extrabold text-sky-400 text-sm sm:text-base">Напрямую в WhatsApp</p></div>
+      </div>
+    </section>
+
+    <!-- Catalog Main Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-12 pb-16" aria-labelledby="catalogTitle">
+      <div class="mb-7">
+        <p class="text-sm font-extrabold text-sky-400">16 проверенных моделей</p>
+        <h2 id="catalogTitle" class="mt-1 text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white">Выберите свой фильтр</h2>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div id="catalogControls" class="scroll-mt-28 bg-slate-900/80 border border-slate-800 rounded-3xl p-4 sm:p-6 mb-8 shadow-xl backdrop-blur-md">
+        <div class="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+          <div class="relative flex-1">
+            <label for="searchInput" class="sr-only">Поиск фильтра</label>
+            <input type="text" id="searchInput" placeholder="Найти FOURA, Alkaline, страну или характеристику" class="w-full bg-slate-950/80 border border-slate-700/70 focus:border-sky-400 focus:ring-4 focus:ring-sky-500/20 rounded-xl px-4 py-3 pl-11 text-sm text-slate-100 placeholder-slate-500 transition-all outline-none">
+            <svg class="w-5 h-5 text-sky-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <button id="clearSearchBtn" class="hidden absolute right-3 top-3 text-xs text-sky-400 hover:text-white px-2.5 py-1 bg-slate-800 rounded-lg border border-slate-700">Очистить</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <label for="sortSelect" class="text-xs font-semibold text-slate-400 whitespace-nowrap">Сортировка:</label>
+            <select id="sortSelect" class="flex-1 bg-slate-950/80 border border-slate-700/70 text-xs sm:text-sm text-slate-200 rounded-xl px-3.5 py-3 outline-none focus:border-sky-400 focus:ring-4 focus:ring-sky-500/20 cursor-pointer">
+              <option value="recommended">Рекомендуемые</option>
+              <option value="price-asc">Сначала доступные</option>
+              <option value="price-desc">Сначала премиум</option>
+              <option value="stages-desc">По количеству ступеней</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 mt-5 scrollbar-thin">
+          <button class="filter-tab active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap bg-sky-500 text-slate-950 shadow-[0_0_15px_rgba(56,189,248,0.35)]" data-category="all">Все (<span id="countAll">16</span>)</button>
+          <button class="filter-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap bg-slate-950/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800" data-category="direct">⚡ Без бака</button>
+          <button class="filter-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap bg-slate-950/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800" data-category="tank">С баком</button>
+          <button class="filter-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap bg-slate-950/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800" data-category="hydrogen">H₂ водородные</button>
+          <button class="filter-tab px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap bg-slate-950/60 text-slate-300 hover:bg-slate-800/80 border border-slate-800" data-category="commercial">Для бизнеса</button>
+        </div>
+
+        <!-- Country Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pt-4 border-t border-slate-800 mt-4 text-xs">
+          <span class="text-slate-400 font-bold whitespace-nowrap">Страна:</span>
+          <button class="country-tab active px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold whitespace-nowrap" data-country="all">Все</button>
+          <button class="country-tab px-3 py-1.5 rounded-lg bg-slate-950/60 text-slate-400 hover:bg-slate-800/80 font-bold whitespace-nowrap border border-slate-800" data-country="KR">🇰🇷 Корея</button>
+          <button class="country-tab px-3 py-1.5 rounded-lg bg-slate-950/60 text-slate-400 hover:bg-slate-800/80 font-bold whitespace-nowrap border border-slate-800" data-country="USA">🇺🇸 США</button>
+          <button class="country-tab px-3 py-1.5 rounded-lg bg-slate-950/60 text-slate-400 hover:bg-slate-800/80 font-bold whitespace-nowrap border border-slate-800" data-country="DE">🇩🇪 Германия</button>
+          <button class="country-tab px-3 py-1.5 rounded-lg bg-slate-950/60 text-slate-400 hover:bg-slate-800/80 font-bold whitespace-nowrap border border-slate-800" data-country="TR">🇹🇷 Турция</button>
+        </div>
+      </div>
+
+      <!-- Dynamic Product Cards Grid -->
+      <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div class="col-span-full text-center py-20 text-slate-400"><div class="animate-spin w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>Загрузка каталога VODEL…</div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="hidden text-center py-14 bg-slate-900/80 border border-slate-800 rounded-3xl p-8 max-w-md mx-auto my-8 backdrop-blur-md">
+        <div class="text-4xl mb-3">🔍</div>
+        <h3 class="text-lg font-extrabold text-white mb-1">Ничего не найдено</h3>
+        <p class="text-slate-400 text-sm mb-4">Измените поиск или сбросьте фильтры.</p>
+        <button id="resetFiltersBtn" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 rounded-xl text-xs font-extrabold transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)]">Сбросить фильтры</button>
+      </div>
+
+      <!-- Why VODEL Section -->
+      <section class="mt-20 pt-12 border-t border-slate-800" aria-labelledby="whyVodelTitle">
+        <div class="max-w-2xl mb-8">
+          <h2 id="whyVodelTitle" class="text-2xl sm:text-3xl font-extrabold tracking-[-0.03em] text-white">Почему выбирают VODEL</h2>
+          <p class="mt-2 text-slate-400 text-sm">Оригинальные системы заводской сборки и понятная поддержка после покупки.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="p-6 bg-slate-900/70 border border-slate-800 rounded-3xl backdrop-blur-md">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-2xl mb-4">💧</div>
+            <h3 class="font-extrabold text-white text-lg">2 вида воды</h3>
+            <p class="mt-2 text-slate-400 text-sm leading-relaxed">Минерализованная вода для кухни и щелочная вода для питья — в моделях с двойной подачей.</p>
+          </div>
+          <div class="p-6 bg-slate-900/70 border border-slate-800 rounded-3xl backdrop-blur-md">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-2xl mb-4">🛡️</div>
+            <h3 class="font-extrabold text-white text-lg">3 года гарантии</h3>
+            <p class="mt-2 text-slate-400 text-sm leading-relaxed">15 лет бесплатной работы мастера при сервисном обслуживании.</p>
+          </div>
+          <div class="p-6 bg-slate-900/70 border border-slate-800 rounded-3xl backdrop-blur-md">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-2xl mb-4">💳</div>
+            <h3 class="font-extrabold text-white text-lg">Гибкая рассрочка</h3>
+            <p class="mt-2 text-slate-400 text-sm leading-relaxed">Платежи на 12 или 24 месяца без скрытых процентов через ведущие банки.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Product Modal Details Dialog -->
+  <div id="productModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Подробная информация о фильтре">
+    <div role="document" class="relative bg-slate-900 border border-slate-700/80 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-[0_25px_70px_rgba(0,0,0,0.8)] p-5 sm:p-7 text-left my-8">
+      <button id="closeModalBtn" aria-label="Закрыть" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 border border-slate-700 flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Sticky Bottom Cart / Consultation Drawer -->
+  <aside aria-label="Выбранные фильтры" id="cartDrawer" class="fixed bottom-0 inset-x-0 z-50 bg-slate-950/90 border-t border-sky-500/30 backdrop-blur-2xl shadow-[0_-12px_40px_rgba(0,0,0,0.8)] transition-transform transform translate-y-full duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3 w-full sm:w-auto overflow-x-auto">
+        <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-sky-500 text-slate-950 font-black text-sm shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.4)]"><span id="cartCountBadge">0</span></div>
+        <div class="text-left shrink-0"><div class="text-xs text-slate-400 font-semibold">Выбрано для консультации:</div><div id="cartSelectedNames" class="text-xs sm:text-sm font-extrabold text-white truncate max-w-[280px] sm:max-w-md">Выберите 1–3 фильтра</div></div>
+        <div id="cartChipsContainer" class="hidden md:flex items-center gap-1.5 overflow-x-auto pl-2 border-l border-slate-800"></div>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <button id="clearCartBtn" class="text-xs text-slate-400 hover:text-white px-2.5 py-2.5 rounded-xl hover:bg-slate-800 transition-colors whitespace-nowrap">Очистить</button>
+        <a id="consultWhatsappBtn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-whatsapp hover:brightness-110 text-slate-950 font-extrabold px-5 py-3 rounded-xl text-sm transition-all whitespace-nowrap shadow-[0_0_20px_rgba(37,211,102,0.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-400"><span>Перейти в WhatsApp (<span id="cartBtnCount">0</span>)</span></a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-24 right-4 z-[70] bg-slate-900 border border-sky-500/40 text-slate-100 px-4 py-3 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.7)] backdrop-blur-md flex items-center gap-3 transform translate-y-[-320%] transition-transform duration-300" role="status" aria-live="polite"><span id="toastIcon" class="text-xl">✅</span><span id="toastMsg" class="text-xs sm:text-sm font-bold">Товар добавлен к выбору</span></div>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950/80 py-8 px-4 text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4"><span>© 2026 VODEL Казахстан</span><div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6"><span>📍 Алматы · Астана · Шымкент · Атырау</span><a href="https://instagram.com/vodel_kz" target="_blank" rel="noopener noreferrer" class="font-bold text-sky-400 hover:text-sky-300">Instagram @vodel_kz</a></div></div>
+  </footer>
+
+  <script src="./catalog.js"></script>
+</body>
+</html>

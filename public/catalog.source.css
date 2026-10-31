@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  background: #060b18;
+  color-scheme: dark;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: #060b18;
+  color: #f1f5f9;
+}
+
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.25);
+  border-radius: 9999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.55);
+}
+
+.dark-glass {
+  background: rgba(12, 21, 39, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dark-glass-card {
+  background: rgba(13, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+}
+
+.product-card {
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.24s ease, border-color 0.24s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(56, 189, 248, 0.2);
+}
+
+.product-card.selected {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4), 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px -5px rgba(56, 189, 248, 0.28);
+}
+
+.promo-ticker {
+  overflow: hidden;
+}
+
+.promo-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 22s linear infinite;
+  will-change: transform;
+}
+
+.promo-ticker-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: space-between;
+  min-width: 100vw;
+  gap: 1.5rem;
+  padding-inline: 1.5rem;
+}
+
+.promo-ticker-group span::after {
+  content: "•";
+  margin-left: 1.5rem;
+  opacity: 0.7;
+}
+
+.promo-ticker-group span:last-child::after {
+  content: "";
+  margin-left: 0;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .promo-ticker-track {
+    animation: none;
+  }
+
+  .product-card,
+  .product-card img,
+  #cartDrawer,
+  #toast {
+    transition: none !important;
+  }
+
+  .animate-spin {
+    animation: none !important;
+  }
+}

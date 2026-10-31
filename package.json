@@ -1,0 +1,33 @@
+{
+  "name": "vode-sales-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp AI Sales Bot for VODEL using Gemini API & Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node scripts/supervise_bot.js",
+    "dev": "nodemon server.js",
+    "test:reply-shape": "node test_response_format.js",
+    "test:commercial-facts": "node test_commercial_facts.js",
+    "test:catalog": "node test_catalog_full_matrix.js",
+    "build:catalog": "tailwindcss -c tailwind.config.cjs -i ./public/catalog.source.css -o ./public/catalog.css --minify",
+    "test:startup-safety": "node test_automation_safety.js",
+    "test:follow-up-suggestions": "node test_follow_up_suggestions.js",
+    "test:success-case-analysis": "node test_successful_sales_analysis.js",
+    "test:safety": "node test_safety_suite.js",
+    "test:live-safety": "node test_live_safety_dialogues.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-ws": "^5.0.2",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "1.34.7",
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "tailwindcss": "^3.4.17"
+  }
+}

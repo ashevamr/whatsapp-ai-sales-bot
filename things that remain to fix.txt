@@ -1,0 +1,114 @@
+================================================================================
+✅ AUDIT COMPLETE — ALL ISSUES RESOLVED
+================================================================================
+Project: VODEL WhatsApp AI Sales Bot (Node.js + whatsapp-web.js + Gemini AI)
+Root Path: C:/Users/alber/Downloads/sales bot/
+Audited Files: server.js, ai_workflow.js, database.md
+
+Date: 2026-06-28
+Auditor: Claude Opus 4.6
+
+================================================================================
+BUGS FOUND & FIXED
+================================================================================
+
+BUG 1: DUPLICATE `const isExplicitKaspiOrProof` DECLARATION (CRITICAL)
+  FILE: server.js
+  LINES: 330 and 386 (old)
+  PROBLEM: The variable `isExplicitKaspiOrProof` was declared with `const` on
+    line 330 (used by `shouldSendAlbum` guard) AND again on line 386 (used by
+    the Kaspi proof section). In non-strict mode, the second `const` in the
+    same function scope would shadow the first, creating two independent
+    variables. This meant the `!isExplicitKaspiOrProof` guard on
+    `shouldSendAlbum` (line 348) referenced the FIRST declaration, while the
+    Kaspi proof conditional (line 389) used the SECOND — making behavior
+    unpredictable and preventing the album-blocking guard from working reliably.
+  FIX: Removed the duplicate declaration on line 386. Now there is a single
+    `isExplicitKaspiOrProof` (line 330) used consistently by both the album
+    guard AND the Kaspi proof section.
+  STATUS: ✅ FIXED
+
+BUG 2: `aiSaysSendingPhotos` TRIGGERED BY KASPI PROOF CONTEXT (CRITICAL)
+  FILE: server.js
+  LINES: 339-342
+  PROBLEM: When customer asks "Покажи мне где он стоит 420 тысяч" and the AI
+    responds "Конечно, сейчас отправлю вам скриншот с маркетплейса", the phrase
+    "сейчас отправлю" caused `aiSaysSendingPhotos = true`. Combined with the
+    duplicate variable bug above, this bypassed the `isExplicitKaspiOrProof`
+    guard and dumped the entire FOURA product album alongside the Kaspi proof
+    screenshot.
+  FIX: Added `aiTalksAboutKaspiProof` guard that detects when the AI reply
+    contains "скриншот", "маркетплейс", or "доказательств". When the AI is
+    talking about sending a Kaspi proof screenshot (not product photos),
+    `aiSaysSendingPhotos` is now forced to `false`.
+  STATUS: ✅ FIXED
+
+BUG 3: INCOMPLETE STATE RESET ON CHAT CLEAR (MINOR)
+  FILE: server.js
+  LINE: 570-574
+  PROBLEM: The `/api/chats/:id/clear` endpoint reset `albumSent` but did NOT
+    reset `kaspiSent` or `membraneSent`. This meant clearing a chat from the
+    dashboard did not fully reset the media dispatch state — the Kaspi proof
+    and membrane diagram would never re-send even in a fresh conversation.
+  FIX: Added `chats[chatId].kaspiSent = false` and
+    `chats[chatId].membraneSent = false` to the clear endpoint.
+  STATUS: ✅ FIXED
+
+================================================================================
+VERIFICATION RESULTS (REQUIREMENTS vs CODE)
+================================================================================
+
+SPEC REQUIREMENT A: PRODUCT ALBUM DISPATCH (FOURA vs ALKALINE G75)
+  ✅ Albums only send when:
+     - User explicitly requests photos AND NOT asking about Kaspi proof
+     - User confirms with affirmative tokens AND AI isn't currently asking
+     - AI states it IS sending product photos (excluding Kaspi proof context)
+  ✅ `shouldSendAlbum` includes `&& !isExplicitKaspiOrProof` guard
+  ✅ `aiIsAskingToSend` requires `?` in AI reply (questions only)
+  ✅ Routine sales questions ("Подскажите, как к вам обращаться?") do NOT
+     trigger `aiIsAskingToSend` because they lack "фото"/"флагман" keywords
+
+SPEC REQUIREMENT B: KASPI 420k PRICE PROOF SCREENSHOT
+  ✅ `isExplicitKaspiOrProof` correctly detects "420", "каспи", "скрин", etc.
+  ✅ When triggered, sends ONLY `kaspi marketplace screenshot.jpeg` (single pic)
+  ✅ `shouldSendAlbum` is forced FALSE via `!isExplicitKaspiOrProof`
+  ✅ `chats[chatId].kaspiSent = true` prevents duplicate sends
+  ✅ `isCheckoutPhase` prevents false positives during address/time collection
+
+SPEC REQUIREMENT C: MEMBRANE DIAGRAM
+  ✅ Triggers on user/AI mentioning "мембрана", "разница", "скорости очистки"
+  ✅ `chats[chatId].membraneSent = true` ensures exactly ONE send per session
+  ✅ State is persisted via `savePersistentData()`
+
+SPEC REQUIREMENT D: FAUCET PHOTO TRIGGERS
+  ✅ Standard faucet requires BOTH faucet keyword AND specific intent keyword
+  ✅ Designer faucet triggers ONLY on explicit user design/interior keywords
+  ✅ `isDesignRequested` checks `lowerUserText` only (not AI reply) — correct
+  ✅ Standard faucet excludes `isDesignRequested` to prevent double-send
+
+SPEC REQUIREMENT 2A: 5-STEP SALES SEQUENCE (ai_workflow.js)
+  ✅ Steps 1-5 explicitly defined in SYSTEM_INSTRUCTION (lines 104-110)
+  ✅ Payment links forbidden until Steps 1-4 complete (line 110)
+
+SPEC REQUIREMENT 2B: CORE TECHNICAL SPECS (ai_workflow.js)
+  ✅ FOURA specs: 600 GPD, 2200 L/day, 16 cm width, TDS, Anti-flood (line 23)
+  ✅ Dual faucet included for both models (lines 24-26)
+  ✅ Utility ratios: ~5L/day drain, 100-200 KZT/month electricity (lines 43-46)
+
+SPEC REQUIREMENT 2C: OBJECTION HANDLING (ai_workflow.js)
+  ✅ Water stagnation in tank (line 60)
+  ✅ Taste comparison — "equally fresh" (line 54)
+  ✅ Countertop drilling reassurance (line 56)
+  ✅ On-site faucet trial with both options (line 58)
+  ✅ Discount negotiation — free first cartridge replacement, 15k savings (line 36)
+
+================================================================================
+SYNTAX VALIDATION
+================================================================================
+  ✅ server.js parsed successfully by acorn (ECMAScript 2020) — zero errors
+  ✅ ai_workflow.js — no structural issues found
+  ✅ database.md — all sections complete and consistent with ai_workflow.js
+
+================================================================================
+ALL ITEMS RESOLVED. NO REMAINING ISSUES.
+================================================================================
